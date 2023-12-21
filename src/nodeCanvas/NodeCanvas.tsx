@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-
 enum ENodeTypes {
     SOURCE,
     TRANSFORM,
@@ -8,7 +7,7 @@ enum ENodeTypes {
 }
 interface INode {
     name: string,
-    type: ENodeTypes
+    type: ENodeTypes,
 }
 
 interface NodeCanvasProps {
@@ -16,22 +15,41 @@ interface NodeCanvasProps {
     height: number;
 }
 
+const testme = (x:number) => {x = x+10}
+
+const diamondShapePath = (startX: number, startY: number) => {
+    let path1 = new Path2D();
+    path1.moveTo(startX - 50, startY)
+    path1.lineTo(startX, startY - 50)
+    path1.lineTo(startX + 50, startY)
+    path1.lineTo(startX, startY + 50)
+    path1.lineTo(startX -50, startY)
+    return path1
+}
+
 const mySourceNode: INode = { name: 'input1', type: ENodeTypes.SOURCE }
-const myTransformNode: INode = { name: 'input1', type: ENodeTypes.TRANSFORM }
-const myTerminalNode: INode = { name: 'input1', type: ENodeTypes.TERMINAL }
+const myTransformNode: INode = { name: 'input2', type: ENodeTypes.TRANSFORM }
+const myTerminalNode: INode = { name: 'input3', type: ENodeTypes.TERMINAL }
+
+const funOb = {
+    x: 1,
+    y: 2,
+    getOwner: function () {
+       return () => diamondShapePath(this.x, 10)
+    }
+}
+const initState = [mySourceNode, myTransformNode, myTerminalNode]
 
 
 const NodeCanvas = (props: NodeCanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
-    const [canvasNodes, setCanvasNodes] = useState<INode[]>([mySourceNode, myTransformNode, myTerminalNode])
+    const [canvasNodes, setCanvasNodes] = useState<INode[]>(initState)
 
     useEffect(() => {
 
         if (canvasRef.current) {
             const canvas = canvasRef.current;
             const canvasContext = canvas.getContext('2d');
-
-
             const startpos = { startX: 100, startY: 100 }
 
             if (canvasContext) {
@@ -51,15 +69,10 @@ const NodeCanvas = (props: NodeCanvasProps) => {
                     }
 
                     else if (node.type === ENodeTypes.TERMINAL) {
-                        canvasContext.beginPath();
-                        canvasContext.moveTo(startpos.startX - 50, startpos.startY);
-                        canvasContext.lineTo(startpos.startX, startpos.startY - 50);
-                        canvasContext.lineTo(startpos.startX + 50, startpos.startY);
-                        canvasContext.lineTo(startpos.startX, startpos.startY + 50);
-                        canvasContext.lineTo(startpos.startX -50, startpos.startY);
-                        canvasContext.stroke()
+                        //object
+                        const path = diamondShapePath(startpos.startX, startpos.startY)
+                        canvasContext.stroke(path)
                     }
-
                     startpos.startX = startpos.startX + 175
                 }
 
