@@ -31,11 +31,12 @@ const mySourceNode: INode = { name: 'input1', type: ENodeTypes.SOURCE }
 const myTransformNode: INode = { name: 'input2', type: ENodeTypes.TRANSFORM }
 const myTerminalNode: INode = { name: 'input3', type: ENodeTypes.TERMINAL }
 
+// https://www.typescriptlang.org/docs/handbook/functions.html
 const funOb = {
     x: 1,
     y: 2,
     getOwner: function () {
-       return () => diamondShapePath(this.x, 10)
+       return () => diamondShapePath(this.x, this.y)
     }
 }
 const initState = [mySourceNode, myTransformNode, myTerminalNode]
