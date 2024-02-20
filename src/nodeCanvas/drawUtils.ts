@@ -106,4 +106,18 @@ const drawGridFromCenter = (canvasContext: CanvasRenderingContext2D, unit: numbe
     return { x: x, y: y }
   }
 
-  export {drawGridFromCenter, drawRuler, getCenterPoint, getCoordinatesObject, drawCircle, calcGridUnits} 
+
+  const toGridUnits = (originCoords: ICoordinates, coord: ICoordinates, units: number) => {
+    const justx = Math.round((coord.x - originCoords.x) / units)
+    const justy = -Math.round((coord.y - originCoords.y) / units)
+    return { x: justx, y: justy }
+  }
+
+
+  const snapToGrid = (originCoords: ICoordinates ,coord: ICoordinates, units: number) => {
+    const justx = originCoords.x + (coord.x * units)
+    const justy = originCoords.y - (coord.y * units)
+    return { x: justx, y: justy }
+  }
+
+  export {drawGridFromCenter, drawRuler, getCenterPoint, getCoordinatesObject, drawCircle, calcGridUnits, snapToGrid, toGridUnits} 
